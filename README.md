@@ -5,5 +5,5 @@
     -> cd build
     -> make
     -> ./bin/server
-    -> ./bin/client <role>(0 : Admin 1:Student 2:Faculty
+    -> ./bin/client <role>(0 : Admin 1:Student 2:Faculty)
 
