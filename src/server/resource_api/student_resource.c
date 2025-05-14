@@ -59,10 +59,11 @@ int update_student(struct Student student){
   fd = open(student_path,O_WRONLY);
   int rec_no = get_student_key(student.student_name);
   if(rec_no == -1) return error_record_nonexistent; 
-  // get_lock_on_student_record(fd,&lock,F_WRLCK,rec_no);
   pthread_mutex_lock(&mutex_stu_record[rec_no]);
   lseek(fd,rec_no*sizeof(struct Student),SEEK_SET);
   write(fd, &student, sizeof(struct Student));
+  // printf("Enter char to realease lock\n");
+  // getchar();
   pthread_mutex_unlock(&mutex_stu_record[rec_no]);
   close(fd);
   return 0;

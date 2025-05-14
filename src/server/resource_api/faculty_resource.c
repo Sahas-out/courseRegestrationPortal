@@ -41,21 +41,6 @@ void intialize_fac_record(char fac_name[NAME_SIZE]){
     pthread_mutex_unlock(&mutex_fac_keys);
     return -1;
   }
-
-  // void get_lock_on_faculty_record(int fd, struct flock* lock, short lock_type, int rec_no) {
-  //   lock->l_type = lock_type;
-  //   lock->l_whence = SEEK_SET;
-  //   lock->l_start = (rec_no) * sizeof(struct Faculty);
-  //   lock->l_len = sizeof(struct Faculty);
-  //
-  //   fcntl(fd, F_SETLKW, lock);
-  // }
-  //
-  // void release_lock_faculty(int fd, struct flock* lock) {
-  //   lock->l_type = F_UNLCK;
-  //   fcntl(fd, F_SETLK, lock);
-  // }
-  //
   int add_faculty(struct Faculty faculty) {
     int fd;
     fd = open(faculties_path, O_WRONLY);
