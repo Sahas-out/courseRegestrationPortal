@@ -3,7 +3,7 @@
 
 
 void get_user_credentials(struct Authentication_token* auth_tok);
-void display_help_menu();
+void display_help_menu(enum Role role);
 int get_user_request();
 
 struct Student add_student();

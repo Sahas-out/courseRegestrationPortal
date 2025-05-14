@@ -32,7 +32,9 @@ int authenticate_user(struct Authentication_token client_creds){
   }
   return 0;
 }
-
+void handle_not_priviliged(int fd){
+  send(fd,&(struct Message){NOT_PERMITTED,"you are not priviliged to do this action"},sizeof(struct Message),0);
+}
 void * client_routine(void* arg){
   struct Client* client = (struct Client*) arg;
   
@@ -47,6 +49,7 @@ void * client_routine(void* arg){
     switch ((client->last_msg).req_kind){
 
       case ADD_STUDENT:{
+        if(client->creds.role != ADMIN){ handle_not_priviliged(client->fd); continue;}
         struct Student stu;
         memcpy(&stu,client->last_msg.msg,sizeof(struct Student));
         add_student(stu);
@@ -57,10 +60,12 @@ void * client_routine(void* arg){
       case GET_STUDENT:{
         char stu_name[NAME_SIZE];
         strcpy(stu_name,client->last_msg.msg);
+        if(client->creds.role != ADMIN && (client->creds.role != STUDENT || strcmp(client->creds.user_name,stu_name) !=0)){
+          handle_not_priviliged(client->fd); continue;
+        }
         struct Student stu = get_student(stu_name);
         struct Message msg_to_send;
         msg_to_send.req_kind = REQ_SUCCESS;
-        // printf("stu_name %s\n",stu.student_name);
         memcpy(msg_to_send.msg,&stu,sizeof(struct Student));
         send(client->fd,&msg_to_send,sizeof(struct Message),0);
         break;
@@ -69,13 +74,17 @@ void * client_routine(void* arg){
 
       case UPDATE_STUDENT:{
         struct Student student;
-        memcpy(&student,client->last_msg.msg,sizeof(struct Student));
+        memcpy(&student,client->last_msg.msg,sizeof(struct Student));        
+        if(client->creds.role != ADMIN && (client->creds.role != STUDENT || strcmp(client->creds.user_name,student.student_name) !=0)){
+          handle_not_priviliged(client->fd); continue;
+        }
         update_student(student);
         send(client->fd,&(struct Message){REQ_SUCCESS,"succesfully updated the student details"},sizeof(struct Message),0);
         break;
       }
 
       case ADD_FACULTY: {
+        if(client->creds.role != ADMIN){handle_not_priviliged(client->fd); continue;}
         struct Faculty fac;
         memcpy(&fac, client->last_msg.msg, sizeof(struct Faculty));
         add_faculty(fac);
@@ -85,7 +94,10 @@ void * client_routine(void* arg){
 
       case GET_FACULTY: {
         char fac_name[NAME_SIZE];
-        strcpy(fac_name, client->last_msg.msg);
+        strcpy(fac_name, client->last_msg.msg);        
+        if(client->creds.role != ADMIN && (client->creds.role != FACULTY || strcmp(client->creds.user_name,fac_name) !=0)){
+          handle_not_priviliged(client->fd); continue;
+        }
         struct Faculty fac = get_faculty(fac_name);
         struct Message msg_to_send;
         msg_to_send.req_kind = REQ_SUCCESS;
@@ -96,7 +108,10 @@ void * client_routine(void* arg){
 
       case UPDATE_FACULTY: {
         struct Faculty faculty;
-        memcpy(&faculty, client->last_msg.msg, sizeof(struct Faculty));
+        memcpy(&faculty, client->last_msg.msg, sizeof(struct Faculty));        
+        if(client->creds.role != ADMIN && (client->creds.role != FACULTY || strcmp(client->creds.user_name,faculty.faculty_name) !=0)){
+          handle_not_priviliged(client->fd); continue;
+        }
         update_faculty(faculty);
         send(client->fd, &(struct Message){REQ_SUCCESS, "Successfully updated the faculty details"}, sizeof(struct Message), 0);
         break;
@@ -105,6 +120,9 @@ void * client_routine(void* arg){
       case ADD_STUDENT_COURSE: {
         struct Student_course stu_course;
         memcpy(&stu_course, client->last_msg.msg, sizeof(struct Student_course));
+        if(client->creds.role != ADMIN && (client->creds.role != STUDENT || strcmp(client->creds.user_name,stu_course.student_name) !=0)){
+          handle_not_priviliged(client->fd); continue;
+        }
         add_student_course(stu_course);
         send(client->fd, &(struct Message){REQ_SUCCESS, "Successfully added student course"}, sizeof(struct Message), 0);
         break;
@@ -113,6 +131,9 @@ void * client_routine(void* arg){
       case GET_STUDENT_COURSE: {
         char student_name[NAME_SIZE];
         strcpy(student_name, client->last_msg.msg);
+        if(client->creds.role != ADMIN && (client->creds.role != STUDENT || strcmp(client->creds.user_name,student_name) !=0)){
+          handle_not_priviliged(client->fd); continue;
+        }
         struct Array_student_course matching_courses = get_student_course(student_name);
         struct Message msg_to_send;
         msg_to_send.req_kind = REQ_SUCCESS;
@@ -124,6 +145,9 @@ void * client_routine(void* arg){
       case DENROLL_STUDENT_COURSE: {
         struct Student_course stu_course;
         memcpy(&stu_course, client->last_msg.msg, sizeof(struct Student_course));
+        if(client->creds.role != ADMIN && (client->creds.role != STUDENT || strcmp(client->creds.user_name,stu_course.student_name) !=0)){
+          handle_not_priviliged(client->fd); continue;
+        }
         denroll_student_course(stu_course);
         send(client->fd, &(struct Message){REQ_SUCCESS, "Successfully denrolled student from course"}, sizeof(struct Message), 0);
         break;
@@ -131,7 +155,10 @@ void * client_routine(void* arg){
 
       case ADD_COURSE: {
         struct Course course;
-        memcpy(&course, client->last_msg.msg, sizeof(struct Course));
+        memcpy(&course, client->last_msg.msg, sizeof(struct Course));        
+        if(client->creds.role != ADMIN && (client->creds.role != FACULTY || strcmp(client->creds.user_name,course.facuilty_name) !=0)){
+          handle_not_priviliged(client->fd); continue;
+        }
         add_course(course);
         send(client->fd, &(struct Message){REQ_SUCCESS, "Successfully added course"}, sizeof(struct Message), 0);
         break;
@@ -140,6 +167,9 @@ void * client_routine(void* arg){
       case GET_FACULTY_COURSE: {
         char faculty_name[NAME_SIZE];
         strcpy(faculty_name, client->last_msg.msg);
+        if(client->creds.role != ADMIN && (client->creds.role != FACULTY || strcmp(client->creds.user_name,faculty_name) !=0)){
+          handle_not_priviliged(client->fd); continue;
+        }
         struct Array_faculty_course matching_courses = get_faculty_courses(faculty_name);
         struct Message msg_to_send;
         msg_to_send.req_kind = REQ_SUCCESS;
@@ -151,6 +181,9 @@ void * client_routine(void* arg){
       case REMOVE_COURSE: {
         struct Course course;
         memcpy(&course, client->last_msg.msg, sizeof(struct Course));
+        if(client->creds.role != ADMIN && (client->creds.role != FACULTY || strcmp(client->creds.user_name,course.facuilty_name) !=0)){
+          handle_not_priviliged(client->fd); continue;
+        }
         remove_course(course);
         send(client->fd, &(struct Message){REQ_SUCCESS, "Successfully removed course"}, sizeof(struct Message), 0);
         break;

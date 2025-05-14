@@ -1,1 +1,0 @@
-/usr/bin/cc CMakeFiles/client.dir/src/client/client.c.o CMakeFiles/client.dir/src/client/client_ui.c.o -o bin/client 

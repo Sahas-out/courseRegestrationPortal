@@ -16,6 +16,7 @@ enum Req_kind
     LOGOUT = 2,
     REQ_SUCCESS = 3,
     REQ_FAIL = 4,
+    NOT_PERMITTED = 5,
     VOID = 9,
 
     ADD_STUDENT = 11,

@@ -44,7 +44,7 @@ int main(int argc, char* argv[])
 
   while (usr_req != LOGOUT)
   {
-    display_help_menu();
+    display_help_menu(client_role);
     usr_req = get_user_request(); 
     switch (usr_req)
     {

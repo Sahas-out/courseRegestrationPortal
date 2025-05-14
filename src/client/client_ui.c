@@ -48,12 +48,44 @@ void display_student(struct Student student)
 // Function to update a student's grade
 void update_student(struct Student *student)
 {
-  display_student(*student);
 
-  printf("Enter new grade for the above student: ");
-  scanf("%f", &student->student_grade);
-  getchar(); // Consume the leftover newline character
+  int choice;
+  do {
+    display_student(*student);
+    printf("\n--- Update Student Menu ---\n");
+    printf("1. Update Grade\n");
+    printf("2. Update Password\n");
+    printf("3. Update Active State\n");
+    printf("4. Exit\n");
+    printf("Enter your choice: ");
+    scanf("%d", &choice);
+    getchar(); // Consume the leftover newline character
+
+    switch (choice) {
+      case 1:
+        printf("Enter new grade for the student: ");
+        scanf("%f", &student->student_grade);
+        getchar(); // Consume the leftover newline character
+        break;
+      case 2:
+        printf("Enter new password for the student: ");
+        fgets(student->user_password, NAME_SIZE, stdin);
+        student->user_password[strcspn(student->user_password, "\n")] = '\0';
+        break;
+      case 3:
+        printf("Enter new active state (1 for active, 0 for inactive): ");
+        scanf("%d", &student->active);
+        getchar(); // Consume the leftover newline character
+        break;
+      case 4:
+        printf("Exiting update menu.\n");
+        break;
+      default:
+        printf("Invalid choice. Please try again.\n");
+    }
+  } while (choice != 4);
 }
+
 // Function to get a student's name
 void get_student_name(char buf[NAME_SIZE])
 {
@@ -72,16 +104,16 @@ struct Faculty add_faculty()
   fgets(new_faculty.faculty_name, NAME_SIZE, stdin);
   // Remove trailing newline character if present
   new_faculty.faculty_name[strcspn(new_faculty.faculty_name, "\n")] = '\0';
-  
+
   printf("Enter faculty password: ");
   fgets(new_faculty.user_password, NAME_SIZE, stdin);
   // Remove trailing newline character if present
   new_faculty.user_password[strcspn(new_faculty.user_password, "\n")] = '\0';
-  
+
   printf("Enter faculty salary: ");
   scanf("%d", &new_faculty.faculty_salary);
   getchar(); // Consume the leftover newline character
-  
+
   new_faculty.active = 1;
 
   return new_faculty;
@@ -101,14 +133,43 @@ void display_faculty(struct Faculty faculty)
 // Function to update a faculty's salary
 void update_faculty(struct Faculty *faculty)
 {
-  display_faculty(*faculty);
+  int choice;
+  do {
+    display_faculty(*faculty);
+    printf("\n--- Update Faculty Menu ---\n");
+    printf("1. Update Salary\n");
+    printf("2. Update Password\n");
+    printf("3. Update Active State\n");
+    printf("4. Exit\n");
+    printf("Enter your choice: ");
+    scanf("%d", &choice);
+    getchar(); // Consume the leftover newline character
 
-  printf("Enter new salary for the above faculty: ");
-  scanf("%d", &faculty->faculty_salary);
-  getchar(); // Consume the leftover newline character
+    switch (choice) {
+      case 1:
+        printf("Enter new salary for the faculty: ");
+        scanf("%d", &faculty->faculty_salary);
+        getchar(); // Consume the leftover newline character
+        break;
+      case 2:
+        printf("Enter new password for the faculty: ");
+        fgets(faculty->user_password, NAME_SIZE, stdin);
+        faculty->user_password[strcspn(faculty->user_password, "\n")] = '\0';
+        break;
+      case 3:
+        printf("Enter new active state (1 for active, 0 for inactive): ");
+        scanf("%d", &faculty->active);
+        getchar(); // Consume the leftover newline character
+        break;
+      case 4:
+        printf("Exiting update menu.\n");
+        break;
+      default:
+        printf("Invalid choice. Please try again.\n");
+    }
+  } while (choice != 4);
 }
-
-// Function to get a faculty's name
+// Functioo get a faculty's name
 void get_faculty_name(char buf[NAME_SIZE])
 {
   printf("Enter the faculty's name: ");
@@ -174,7 +235,8 @@ void display_fac_courses(struct Array_faculty_course courses, char fac_name[NAME
   printf("---------------------------\n");
 }
 // Function to display the help menu
-void display_help_menu() {
+
+void display_admin_help_menu(){
   printf("\n--- Help Menu ---\n");
   printf("Enter the corresponding number for the desired action:\n");
   printf("%d. Add a new student (ADD_STUDENT)\n", ADD_STUDENT);
@@ -192,7 +254,33 @@ void display_help_menu() {
   printf("%d. Logout (LOGOUT)\n", LOGOUT);
   printf("---------------------------\n");
 }
-
+void display_student_help_menu(){
+  printf("\n--- Help Menu ---\n");
+  printf("Enter the corresponding number for the desired action:\n");
+  printf("%d. Update a student's details (UPDATE_STUDENT)\n", UPDATE_STUDENT);
+  printf("%d. Display a student's details (DISPLAY_STUDENT)\n", DISPLAY_STUDENT);
+  printf("%d. Add a student-course association (ADD_STUDENT_COURSE)\n", ADD_STUDENT_COURSE);
+  printf("%d. Get all courses for a student (GET_STUDENT_COURSE)\n", GET_STUDENT_COURSE);
+  printf("%d. Denroll a student from a course (DENROLL_STUDENT_COURSE)\n", DENROLL_STUDENT_COURSE);
+  printf("%d. Logout (LOGOUT)\n", LOGOUT);
+  printf("---------------------------\n");
+}
+void display_faculty_help_menu(){
+  printf("\n--- Help Menu ---\n");
+  printf("Enter the corresponding number for the desired action:\n");
+  printf("%d. Update a faculty's details (UPDATE_FACULTY)\n", UPDATE_FACULTY);
+  printf("%d. Display a faculty's details (DISPLAY_FACULTY)\n", DISPLAY_FACULTY);
+  printf("%d. Add a new course (ADD_COURSE)\n", ADD_COURSE);
+  printf("%d. Get all courses taught by a faculty (GET_FACULTY_COURSE)\n", GET_FACULTY_COURSE);
+  printf("%d. Remove a course (REMOVE_COURSE)\n", REMOVE_COURSE);
+  printf("%d. Logout (LOGOUT)\n", LOGOUT);
+  printf("---------------------------\n");
+}
+void display_help_menu(enum Role role) {
+  if(role == STUDENT) display_student_help_menu();
+  else if(role == FACULTY) display_faculty_help_menu();
+  else display_admin_help_menu();
+}
 int get_user_request(){
   printf("Enter your choice\n");
   int usr_req;
