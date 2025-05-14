@@ -1,0 +1,6 @@
+/home/sahas-sangal/Projects/OsLabMiniProject/courseRegistrationPortal/build/CMakeFiles/resource_files.dir
+/home/sahas-sangal/Projects/OsLabMiniProject/courseRegistrationPortal/build/CMakeFiles/server.dir
+/home/sahas-sangal/Projects/OsLabMiniProject/courseRegistrationPortal/build/CMakeFiles/client.dir
+/home/sahas-sangal/Projects/OsLabMiniProject/courseRegistrationPortal/build/CMakeFiles/clean_all.dir
+/home/sahas-sangal/Projects/OsLabMiniProject/courseRegistrationPortal/build/CMakeFiles/edit_cache.dir
+/home/sahas-sangal/Projects/OsLabMiniProject/courseRegistrationPortal/build/CMakeFiles/rebuild_cache.dir

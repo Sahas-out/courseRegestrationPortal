@@ -1,0 +1,4 @@
+# Hashes of file build rules.
+b4651bd891b8e33c83517a22a65ffc75 CMakeFiles/clean_all
+efa5ac120aa8bf3c2e6b9f0111fb542e CMakeFiles/resource_files
+62e2d41777fc997bf987e19b6ba362ca resources/students

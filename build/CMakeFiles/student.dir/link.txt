@@ -1,0 +1,1 @@
+/usr/bin/cc CMakeFiles/student.dir/src/student/student.c.o -o bin/student 

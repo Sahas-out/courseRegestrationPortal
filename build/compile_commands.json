@@ -1,0 +1,56 @@
+[
+{
+  "directory": "/home/sahas-sangal/Projects/OsLabMiniProject/courseRegistrationPortal/build",
+  "command": "/usr/bin/cc  -I/home/sahas-sangal/Projects/OsLabMiniProject/courseRegistrationPortal/include -std=gnu11 -o CMakeFiles/server.dir/src/server/server.c.o -c /home/sahas-sangal/Projects/OsLabMiniProject/courseRegistrationPortal/src/server/server.c",
+  "file": "/home/sahas-sangal/Projects/OsLabMiniProject/courseRegistrationPortal/src/server/server.c",
+  "output": "CMakeFiles/server.dir/src/server/server.c.o"
+},
+{
+  "directory": "/home/sahas-sangal/Projects/OsLabMiniProject/courseRegistrationPortal/build",
+  "command": "/usr/bin/cc  -I/home/sahas-sangal/Projects/OsLabMiniProject/courseRegistrationPortal/include -std=gnu11 -o CMakeFiles/server.dir/src/server/client_routine.c.o -c /home/sahas-sangal/Projects/OsLabMiniProject/courseRegistrationPortal/src/server/client_routine.c",
+  "file": "/home/sahas-sangal/Projects/OsLabMiniProject/courseRegistrationPortal/src/server/client_routine.c",
+  "output": "CMakeFiles/server.dir/src/server/client_routine.c.o"
+},
+{
+  "directory": "/home/sahas-sangal/Projects/OsLabMiniProject/courseRegistrationPortal/build",
+  "command": "/usr/bin/cc  -I/home/sahas-sangal/Projects/OsLabMiniProject/courseRegistrationPortal/include -std=gnu11 -o CMakeFiles/server.dir/src/server/resource_api/course_resource.c.o -c /home/sahas-sangal/Projects/OsLabMiniProject/courseRegistrationPortal/src/server/resource_api/course_resource.c",
+  "file": "/home/sahas-sangal/Projects/OsLabMiniProject/courseRegistrationPortal/src/server/resource_api/course_resource.c",
+  "output": "CMakeFiles/server.dir/src/server/resource_api/course_resource.c.o"
+},
+{
+  "directory": "/home/sahas-sangal/Projects/OsLabMiniProject/courseRegistrationPortal/build",
+  "command": "/usr/bin/cc  -I/home/sahas-sangal/Projects/OsLabMiniProject/courseRegistrationPortal/include -std=gnu11 -o CMakeFiles/server.dir/src/server/resource_api/faculty_resource.c.o -c /home/sahas-sangal/Projects/OsLabMiniProject/courseRegistrationPortal/src/server/resource_api/faculty_resource.c",
+  "file": "/home/sahas-sangal/Projects/OsLabMiniProject/courseRegistrationPortal/src/server/resource_api/faculty_resource.c",
+  "output": "CMakeFiles/server.dir/src/server/resource_api/faculty_resource.c.o"
+},
+{
+  "directory": "/home/sahas-sangal/Projects/OsLabMiniProject/courseRegistrationPortal/build",
+  "command": "/usr/bin/cc  -I/home/sahas-sangal/Projects/OsLabMiniProject/courseRegistrationPortal/include -std=gnu11 -o CMakeFiles/server.dir/src/server/resource_api/resource_api.c.o -c /home/sahas-sangal/Projects/OsLabMiniProject/courseRegistrationPortal/src/server/resource_api/resource_api.c",
+  "file": "/home/sahas-sangal/Projects/OsLabMiniProject/courseRegistrationPortal/src/server/resource_api/resource_api.c",
+  "output": "CMakeFiles/server.dir/src/server/resource_api/resource_api.c.o"
+},
+{
+  "directory": "/home/sahas-sangal/Projects/OsLabMiniProject/courseRegistrationPortal/build",
+  "command": "/usr/bin/cc  -I/home/sahas-sangal/Projects/OsLabMiniProject/courseRegistrationPortal/include -std=gnu11 -o CMakeFiles/server.dir/src/server/resource_api/student_course_resource.c.o -c /home/sahas-sangal/Projects/OsLabMiniProject/courseRegistrationPortal/src/server/resource_api/student_course_resource.c",
+  "file": "/home/sahas-sangal/Projects/OsLabMiniProject/courseRegistrationPortal/src/server/resource_api/student_course_resource.c",
+  "output": "CMakeFiles/server.dir/src/server/resource_api/student_course_resource.c.o"
+},
+{
+  "directory": "/home/sahas-sangal/Projects/OsLabMiniProject/courseRegistrationPortal/build",
+  "command": "/usr/bin/cc  -I/home/sahas-sangal/Projects/OsLabMiniProject/courseRegistrationPortal/include -std=gnu11 -o CMakeFiles/server.dir/src/server/resource_api/student_resource.c.o -c /home/sahas-sangal/Projects/OsLabMiniProject/courseRegistrationPortal/src/server/resource_api/student_resource.c",
+  "file": "/home/sahas-sangal/Projects/OsLabMiniProject/courseRegistrationPortal/src/server/resource_api/student_resource.c",
+  "output": "CMakeFiles/server.dir/src/server/resource_api/student_resource.c.o"
+},
+{
+  "directory": "/home/sahas-sangal/Projects/OsLabMiniProject/courseRegistrationPortal/build",
+  "command": "/usr/bin/cc  -I/home/sahas-sangal/Projects/OsLabMiniProject/courseRegistrationPortal/include -std=gnu11 -o CMakeFiles/client.dir/src/client/client.c.o -c /home/sahas-sangal/Projects/OsLabMiniProject/courseRegistrationPortal/src/client/client.c",
+  "file": "/home/sahas-sangal/Projects/OsLabMiniProject/courseRegistrationPortal/src/client/client.c",
+  "output": "CMakeFiles/client.dir/src/client/client.c.o"
+},
+{
+  "directory": "/home/sahas-sangal/Projects/OsLabMiniProject/courseRegistrationPortal/build",
+  "command": "/usr/bin/cc  -I/home/sahas-sangal/Projects/OsLabMiniProject/courseRegistrationPortal/include -std=gnu11 -o CMakeFiles/client.dir/src/client/client_ui.c.o -c /home/sahas-sangal/Projects/OsLabMiniProject/courseRegistrationPortal/src/client/client_ui.c",
+  "file": "/home/sahas-sangal/Projects/OsLabMiniProject/courseRegistrationPortal/src/client/client_ui.c",
+  "output": "CMakeFiles/client.dir/src/client/client_ui.c.o"
+}
+]
