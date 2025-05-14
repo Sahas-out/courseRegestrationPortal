@@ -38,10 +38,10 @@ int get_student_course_key(char student_name[NAME_SIZE], char course_name[NAME_S
     return -1;
 }
 
-void get_lock_on_student_course_record(int fd, struct flock* lock, short lock_type, char student_name[NAME_SIZE], char course_name[NAME_SIZE]) {
+void get_lock_on_student_course_record(int fd, struct flock* lock, short lock_type,int rec_no) {
     lock->l_type = lock_type;
     lock->l_whence = SEEK_SET;
-    lock->l_start = (get_student_course_key(student_name, course_name)) * sizeof(struct Student_course);
+    lock->l_start = (rec_no) * sizeof(struct Student_course);
     lock->l_len = sizeof(struct Student_course);
 
     fcntl(fd, F_SETLKW, lock);
@@ -61,13 +61,12 @@ void release_student_course_lock(int fd, struct flock* lock) {
     fcntl(fd, F_SETLK, lock);
 }
 
-void add_student_course(struct Student_course stu_course) {
+int add_student_course(struct Student_course stu_course) {
     struct flock lock;
     int fd;
-    if ((fd = open(std_course_path, O_WRONLY)) < 0) {
-        perror("Error while opening the file\n");
-        return;
-    }
+    fd = open(std_course_path, O_WRONLY);
+    int rec_no = get_student_course_key(stu_course.student_name, stu_course.course_name);
+    if(rec_no != -1) return error_duplicate_record;
     stu_course.denrolled = 0;
     lseek(fd, 0, SEEK_END);
     write(fd, &stu_course, sizeof(struct Student_course));
@@ -78,6 +77,7 @@ void add_student_course(struct Student_course stu_course) {
     n_student_course_keys++;
     pthread_mutex_unlock(&mutex_stu_course_keys);
     close(fd);
+    return 0;
 }
 
 struct Array_student_course get_student_course(char student_name[NAME_SIZE]) {
@@ -87,8 +87,6 @@ struct Array_student_course get_student_course(char student_name[NAME_SIZE]) {
     int count = 0;
 
     fd = open(std_course_path, O_RDONLY);
-
-
     get_lock_student_course_file(fd, &lock, F_RDLCK);
 
     struct Student_course stu_course;
@@ -104,21 +102,20 @@ struct Array_student_course get_student_course(char student_name[NAME_SIZE]) {
     return matching_courses;
 }
 
-void denroll_student_course(struct Student_course stu_course) {
+int denroll_student_course(struct Student_course stu_course) {
     struct flock lock;
     int fd;
 
-    if ((fd = open(std_course_path, O_WRONLY)) < 0) {
-        perror("Error while opening the file\n");
-        return;
-    }
-
-    get_lock_on_student_course_record(fd, &lock, F_WRLCK, stu_course.student_name, stu_course.course_name);
+    fd = open(std_course_path, O_WRONLY);
+    int rec_no = get_student_course_key(stu_course.student_name, stu_course.course_name);
+    if(rec_no == -1) return error_record_nonexistent;
+    get_lock_on_student_course_record(fd, &lock, F_WRLCK,rec_no);
 
     stu_course.denrolled = 1;
-    lseek(fd, get_student_course_key(stu_course.student_name, stu_course.course_name) * sizeof(struct Student_course), SEEK_SET);
+    lseek(fd,rec_no * sizeof(struct Student_course), SEEK_SET);
     write(fd, &stu_course, sizeof(struct Student_course));
 
     release_student_course_lock(fd, &lock);
     close(fd);
+    return 0;
 }

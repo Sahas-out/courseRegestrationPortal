@@ -67,6 +67,7 @@ int main(int argc, char* argv[])
       get_student_name(msg_to_send.msg);
       send(server_sock, &msg_to_send, sizeof(struct Message), 0);
       recv(server_sock, &last_msg_rcv, sizeof(struct Message), 0);
+      if(last_msg_rcv.req_kind != REQ_SUCCESS){ printf("%s\n",last_msg_rcv.msg);continue;}
       struct Student stu;
       memcpy(&stu, last_msg_rcv.msg, sizeof(struct Student));
       display_student(stu);
@@ -79,6 +80,7 @@ int main(int argc, char* argv[])
       get_student_name(msg_to_send.msg);
       send(server_sock, &msg_to_send, sizeof(struct Message), 0);
       recv(server_sock, &last_msg_rcv, sizeof(struct Message), 0);
+      if(last_msg_rcv.req_kind != REQ_SUCCESS){ printf("%s\n",last_msg_rcv.msg);continue;}
       struct Student stu;
       memcpy(&stu, last_msg_rcv.msg, sizeof(struct Student));
       update_student(&stu);
@@ -108,6 +110,7 @@ int main(int argc, char* argv[])
       get_faculty_name(msg_to_send.msg);
       send(server_sock, &msg_to_send, sizeof(struct Message), 0);
       recv(server_sock, &last_msg_rcv, sizeof(struct Message), 0);
+      if(last_msg_rcv.req_kind != REQ_SUCCESS){ printf("%s\n",last_msg_rcv.msg);continue;}
       struct Faculty fac;
       memcpy(&fac, last_msg_rcv.msg, sizeof(struct Faculty));
       display_faculty(fac);
@@ -121,6 +124,7 @@ int main(int argc, char* argv[])
       get_faculty_name(msg_to_send.msg);
       send(server_sock, &msg_to_send, sizeof(struct Message), 0);
       recv(server_sock, &last_msg_rcv, sizeof(struct Message), 0);
+      if(last_msg_rcv.req_kind != REQ_SUCCESS){ printf("%s\n",last_msg_rcv.msg);continue;}
       struct Faculty fac;
       memcpy(&fac, last_msg_rcv.msg, sizeof(struct Faculty));
       update_faculty(&fac);
@@ -149,6 +153,7 @@ int main(int argc, char* argv[])
       get_student_name(msg_to_send.msg);
       send(server_sock, &msg_to_send, sizeof(struct Message), 0);
       recv(server_sock, &last_msg_rcv, sizeof(struct Message), 0);
+      if(last_msg_rcv.req_kind != REQ_SUCCESS){ printf("%s\n",last_msg_rcv.msg);continue;}
       struct Array_student_course courses;
       memcpy(&courses, last_msg_rcv.msg, sizeof(struct Array_student_course));
       display_student_course(courses,msg_to_send.msg);

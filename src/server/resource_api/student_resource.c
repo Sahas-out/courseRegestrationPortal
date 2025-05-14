@@ -33,10 +33,10 @@ int get_student_key(char match_value[NAME_SIZE]){
   pthread_mutex_unlock(&mutex_stu_keys);
   return -1;
 }
-void get_lock_on_student_record(int fd,struct flock* lock,short lock_type,char match_value[NAME_SIZE]){
+void get_lock_on_student_record(int fd,struct flock* lock,short lock_type,int rec_no){
   lock->l_type = lock_type;
   lock->l_whence = SEEK_SET;
-  lock->l_start = (get_student_key(match_value))*sizeof(struct Student);
+  lock->l_start = (rec_no)*sizeof(struct Student);
   lock->l_len = sizeof(struct Student);
 
   fcntl(fd, F_SETLKW,&lock);
@@ -45,10 +45,12 @@ void release_lock_student(int fd,struct flock* lock){
   lock->l_type = F_UNLCK;
   fcntl(fd, F_SETLK,lock);
 }
-void add_student(struct Student student){ 
+int add_student(struct Student student){ 
   struct flock lock;
   int fd;
-  if((fd = open(student_path,O_WRONLY))<0){perror("Error while opening the file\n");return;}
+  fd = open(student_path,O_WRONLY);
+  int rec_no = get_student_key(student.student_name);
+  if(rec_no != -1) return error_duplicate_record; 
   student.active = 1;
   lseek(fd, 0, SEEK_END);
   write(fd,&student,sizeof(struct Student));
@@ -57,25 +59,31 @@ void add_student(struct Student student){
   n_student_keys++; 
   pthread_mutex_unlock(&mutex_stu_keys);
   close(fd);
+  return 0;
 }
 
-void update_student(struct Student student){
+int update_student(struct Student student){
   struct flock lock;
   int fd;
   fd = open(student_path,O_WRONLY);
-  get_lock_on_student_record(fd,&lock,F_WRLCK,student.student_name);
-  lseek(fd,get_student_key(student.student_name)*sizeof(struct Student),SEEK_SET);
+  int rec_no = get_student_key(student.student_name);
+  if(rec_no == -1) return error_record_nonexistent; 
+  get_lock_on_student_record(fd,&lock,F_WRLCK,rec_no);
+  lseek(fd,rec_no*sizeof(struct Student),SEEK_SET);
   write(fd, &student, sizeof(struct Student));
   release_lock_student(fd,&lock);
   close(fd);
+  return 0;
 }
 
 struct Student get_student(char student_name[NAME_SIZE]){
   struct flock lock;
   int fd;
   fd = open(student_path,O_RDONLY);
-  get_lock_on_student_record(fd, &lock, F_RDLCK, student_name);
-  lseek(fd,get_student_key(student_name)*sizeof(struct Student),SEEK_SET);
+  int rec_no = get_student_key(student_name);
+  if(rec_no == -1) return (struct Student){"",0.0,"",error_record_nonexistent}; 
+  get_lock_on_student_record(fd, &lock, F_RDLCK, rec_no);
+  lseek(fd,rec_no*sizeof(struct Student),SEEK_SET);
   struct Student student;
   read(fd,&student,sizeof(struct Student));
   release_lock_student(fd,&lock);

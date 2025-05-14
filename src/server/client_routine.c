@@ -35,6 +35,12 @@ int authenticate_user(struct Authentication_token client_creds){
 void handle_not_priviliged(int fd){
   send(fd,&(struct Message){NOT_PERMITTED,"you are not priviliged to do this action"},sizeof(struct Message),0);
 }
+void handle_resource_error(int error_code,int client_fd){
+  if(error_code == error_duplicate_record)
+    send(client_fd,&(struct Message){REQ_FAIL,"duplicate record has been found"},sizeof(struct Message),0);
+  else if(error_code == error_record_nonexistent)
+    send(client_fd,&(struct Message){REQ_FAIL,"no such record exist"},sizeof(struct Message),0);
+}
 void * client_routine(void* arg){
   struct Client* client = (struct Client*) arg;
   
@@ -52,7 +58,8 @@ void * client_routine(void* arg){
         if(client->creds.role != ADMIN){ handle_not_priviliged(client->fd); continue;}
         struct Student stu;
         memcpy(&stu,client->last_msg.msg,sizeof(struct Student));
-        add_student(stu);
+        int r = add_student(stu);
+        if(r != 0){handle_resource_error(r,client->fd); continue;}
         send(client->fd,&(struct Message){REQ_SUCCESS,"succesfully added student"},sizeof(struct Message),0);
         break;
       }
@@ -64,6 +71,7 @@ void * client_routine(void* arg){
           handle_not_priviliged(client->fd); continue;
         }
         struct Student stu = get_student(stu_name);
+        if(stu.active == error_record_nonexistent){handle_resource_error(stu.active,client->fd); continue;}
         struct Message msg_to_send;
         msg_to_send.req_kind = REQ_SUCCESS;
         memcpy(msg_to_send.msg,&stu,sizeof(struct Student));
@@ -78,7 +86,8 @@ void * client_routine(void* arg){
         if(client->creds.role != ADMIN && (client->creds.role != STUDENT || strcmp(client->creds.user_name,student.student_name) !=0)){
           handle_not_priviliged(client->fd); continue;
         }
-        update_student(student);
+        int r = update_student(student);        
+        if(r != 0){handle_resource_error(r,client->fd); continue;}
         send(client->fd,&(struct Message){REQ_SUCCESS,"succesfully updated the student details"},sizeof(struct Message),0);
         break;
       }
@@ -87,7 +96,8 @@ void * client_routine(void* arg){
         if(client->creds.role != ADMIN){handle_not_priviliged(client->fd); continue;}
         struct Faculty fac;
         memcpy(&fac, client->last_msg.msg, sizeof(struct Faculty));
-        add_faculty(fac);
+        int r = add_faculty(fac);
+        if(r != 0){handle_resource_error(r,client->fd); continue;}
         send(client->fd, &(struct Message){REQ_SUCCESS, "Successfully added faculty"}, sizeof(struct Message), 0);
         break;
       }
@@ -99,6 +109,7 @@ void * client_routine(void* arg){
           handle_not_priviliged(client->fd); continue;
         }
         struct Faculty fac = get_faculty(fac_name);
+        if(fac.active == error_record_nonexistent){handle_resource_error(fac.active,client->fd); continue;}
         struct Message msg_to_send;
         msg_to_send.req_kind = REQ_SUCCESS;
         memcpy(msg_to_send.msg, &fac, sizeof(struct Faculty));
@@ -112,7 +123,8 @@ void * client_routine(void* arg){
         if(client->creds.role != ADMIN && (client->creds.role != FACULTY || strcmp(client->creds.user_name,faculty.faculty_name) !=0)){
           handle_not_priviliged(client->fd); continue;
         }
-        update_faculty(faculty);
+        int r = update_faculty(faculty);
+        if(r != 0){handle_resource_error(r,client->fd); continue;}
         send(client->fd, &(struct Message){REQ_SUCCESS, "Successfully updated the faculty details"}, sizeof(struct Message), 0);
         break;
       }
@@ -123,7 +135,8 @@ void * client_routine(void* arg){
         if(client->creds.role != ADMIN && (client->creds.role != STUDENT || strcmp(client->creds.user_name,stu_course.student_name) !=0)){
           handle_not_priviliged(client->fd); continue;
         }
-        add_student_course(stu_course);
+        int r = add_student_course(stu_course);
+        if(r != 0){handle_resource_error(r,client->fd); continue;}
         send(client->fd, &(struct Message){REQ_SUCCESS, "Successfully added student course"}, sizeof(struct Message), 0);
         break;
       }
@@ -148,7 +161,8 @@ void * client_routine(void* arg){
         if(client->creds.role != ADMIN && (client->creds.role != STUDENT || strcmp(client->creds.user_name,stu_course.student_name) !=0)){
           handle_not_priviliged(client->fd); continue;
         }
-        denroll_student_course(stu_course);
+        int r = denroll_student_course(stu_course);
+        if(r != 0){handle_resource_error(r,client->fd); continue;}
         send(client->fd, &(struct Message){REQ_SUCCESS, "Successfully denrolled student from course"}, sizeof(struct Message), 0);
         break;
       }
@@ -159,7 +173,8 @@ void * client_routine(void* arg){
         if(client->creds.role != ADMIN && (client->creds.role != FACULTY || strcmp(client->creds.user_name,course.facuilty_name) !=0)){
           handle_not_priviliged(client->fd); continue;
         }
-        add_course(course);
+        int r =add_course(course);
+        if(r != 0){handle_resource_error(r,client->fd); continue;}
         send(client->fd, &(struct Message){REQ_SUCCESS, "Successfully added course"}, sizeof(struct Message), 0);
         break;
       }
@@ -184,7 +199,8 @@ void * client_routine(void* arg){
         if(client->creds.role != ADMIN && (client->creds.role != FACULTY || strcmp(client->creds.user_name,course.facuilty_name) !=0)){
           handle_not_priviliged(client->fd); continue;
         }
-        remove_course(course);
+        int r = remove_course(course);
+        if(r != 0){handle_resource_error(r,client->fd); continue;}
         send(client->fd, &(struct Message){REQ_SUCCESS, "Successfully removed course"}, sizeof(struct Message), 0);
         break;
       }
